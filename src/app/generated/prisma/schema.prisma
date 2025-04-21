@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/app/generated/prisma" // Adjust path as needed
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id          Int              @id @default(autoincrement())
+  firstName   String?
+  lastName    String?
+  middleName  String?
+  nickname    String?
+  phoneNumber String?
+  email       String?
+  address     String? // Added address field (optional)
+  note        String?
+  description String?
+  isFavorite  FavoriteContact?
+  messages    Message[] // Relation field for messages associated with this contact
+
+  createdAt             DateTime  @default(now()) // Added created date (automatically set)
+  mostRecentContactDate DateTime? // Added most recent contact date (optional, needs manual update)
+
+  @@map("contacts") // Optional: Explicitly map model name to table name if desired
+}
+
+model FavoriteContact {
+  contactId Int     @unique
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade) // Cascade delete: if a contact is deleted, their favorite status is also removed.
+
+  @@map("favorite_contacts")
+}
+
+// New Model for Messages
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String // The content of the message
+  timestamp DateTime @default(now()) // Timestamp when the message was created/sent/received
+
+  contactId Int // Foreign key linking to the Contact model
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade) // Relation field back to the Contact model. Cascade delete: if a contact is deleted, their messages are also deleted.
+
+  @@index([timestamp]) // Index on timestamp for efficient sorting/querying by date
+  @@index([contactId]) // Index on contactId for efficient querying of messages per contact
+  @@map("messages") // Optional: Explicit map to table name
+}
