@@ -1,0 +1,138 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  position: relative;
+  height: 100%;
+}
+
+.form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.formContent {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+}
+
+.formGroup label {
+  font-weight: 500;
+  color: #333;
+}
+
+.formGroup input,
+.formGroup textarea {
+  padding: 0.5rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #666;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 1rem;
+  border-top: 1px solid #e5e5e5;
+  z-index: 1;
+  width: 100%;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.submitButton,
+.cancelButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.submitButton {
+  background: #333;
+  color: white;
+  border: none;
+}
+
+.submitButton:hover {
+  background: #444;
+}
+
+.cancelButton {
+  background: none;
+  border: 1px solid #e5e5e5;
+  color: #666;
+}
+
+.cancelButton:hover {
+  background: #f5f5f5;
+  border-color: #666;
+}
+
+.labelContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.error span {
+  color: #d9534f;
+}
+
+.success span {
+  color: #5cb85c;
+}
+
+.warning span {
+  color: #f0ad4e;
+}
+
+.error input,
+.error input:focus,
+.error textarea,
+.error textarea:focus {
+  border-color: #d9534f;
+}
+
+.success input,
+.success input:focus,
+.success textarea,
+.success textarea:focus {
+  border-color: #5cb85c;
+}
+.warning input,
+.warning input:focus,
+.warning textarea,
+.warning textarea:focus {
+  border-color: #f0ad4e;
+}

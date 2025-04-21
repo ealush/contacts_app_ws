@@ -1,0 +1,91 @@
+.container {
+  margin: 2rem auto;
+  padding: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  width: var(--max-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  max-height: 800px;
+  height: 800px;
+}
+
+.outerHeader {
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  background: white;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.outerFooter {
+  width: 100%;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e5e5;
+  background: white;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.content {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.header {
+  margin-bottom: 0.5rem;
+}
+
+.scrollableContent {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.fab {
+  position: fixed;
+  right: calc((100vw - var(--max-width)) / 2 - 25px);
+  top: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  z-index: 10;
+}
+
+.fab:hover {
+  background: #444;
+  transform: scale(1.05);
+}
+
+.fab svg {
+  width: 20px;
+  height: 20px;
+}
