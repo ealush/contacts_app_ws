@@ -1,5 +1,4 @@
-import createContactAction from "../actions/createContactAction";
-import editContactAction from "../actions/editContactAction";
+import upsertContactAction from "../actions/upsertContactAction";
 import styles from "./ContactForm.module.css";
 import FormInput from "./FormInput";
 import PageLayout, { Content, Header } from "./PageLayout";
@@ -22,13 +21,15 @@ type ContactFormProps = {
 };
 
 export default function ContactForm({ initialData, title }: ContactFormProps) {
-  const action = initialData?.id ? editContactAction : createContactAction;
-
   return (
     <PageLayout>
       <Header title={title} />
       <Content>
-        <form className={styles.form} id="contact-form" action={action}>
+        <form
+          className={styles.form}
+          id="contact-form"
+          action={upsertContactAction}
+        >
           <div className={styles.formContent}>
             {initialData?.id ? (
               <input

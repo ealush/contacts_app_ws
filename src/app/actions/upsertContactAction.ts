@@ -4,7 +4,7 @@ import { PrismaClient } from "@/app/generated/prisma";
 import { redirect } from "next/navigation";
 const prisma = new PrismaClient();
 
-export default async function editContactAction(formData: FormData) {
+export default async function upsertContactAction(formData: FormData) {
   const contactId = formData.get("contactId") as string;
   const firstName = formData.get("firstName")?.toString();
   const lastName = formData.get("lastName")?.toString();
@@ -16,20 +16,36 @@ export default async function editContactAction(formData: FormData) {
   const note = formData.get("note")?.toString();
   const description = formData.get("description")?.toString();
 
-  await prisma.contact.update({
-    where: { id: parseInt(contactId) },
-    data: {
-      firstName,
-      lastName,
-      middleName,
-      nickname,
-      phoneNumber,
-      email,
-      address,
-      note,
-      description,
-    },
-  });
+  if (contactId === null || contactId === "") {
+    await prisma.contact.create({
+      data: {
+        firstName,
+        lastName,
+        middleName,
+        nickname,
+        phoneNumber,
+        email,
+        address,
+        note,
+        description,
+      },
+    });
+  } else {
+    await prisma.contact.update({
+      where: { id: parseInt(contactId) },
+      data: {
+        firstName,
+        lastName,
+        middleName,
+        nickname,
+        phoneNumber,
+        email,
+        address,
+        note,
+        description,
+      },
+    });
+  }
 
   redirect("/");
 }
