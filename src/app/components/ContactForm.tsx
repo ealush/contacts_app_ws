@@ -1,4 +1,5 @@
 import upsertContactAction from "../actions/upsertContactAction";
+import ButtonSubmit from "./ButtonSubmit";
 import styles from "./ContactForm.module.css";
 import FormInput from "./FormInput";
 import PageLayout, { Content, Header } from "./PageLayout";
@@ -113,13 +114,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
             />
           </div>
           <div className={styles.formActions}>
-            <button
-              type="submit"
-              form="contact-form"
-              className={styles.submitButton}
-            >
-              Save
-            </button>
+            <ButtonSubmit />
             <Link href="/" className={styles.cancelButton}>
               Cancel
             </Link>
