@@ -3,13 +3,12 @@
 import React, {
   useState,
   useEffect,
-  FormEvent,
-  ChangeEvent,
-  useCallback,
   useActionState,
+  useTransition,
 } from "react";
 import styles from "./pager.module.css";
 import sendMessageAction from "../actions/sendMessageAction";
+import fetchMessagesAction from "../actions/fetchMessagesAction";
 
 interface Message {
   id: number;
@@ -25,28 +24,15 @@ interface PagerProps {
 export default function Pager({ contactId }: PagerProps) {
   const [, formAction, isPending] = useActionState(sendMessage, null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const fetchMessages = useCallback(
-    async function fetchMessages() {
-      setIsLoading(true);
-      const response = await fetch(`/api/contacts/${contactId}/message`);
-
-      const data: Message[] = await response.json();
-      setMessages(data);
-      setIsLoading(false);
-    },
-    [contactId]
-  );
+  const [isLoading, startTransition] = useTransition();
 
   useEffect(() => {
-    if (contactId) {
-      fetchMessages();
-    } else {
-      setMessages([]);
-      setIsLoading(false);
-    }
-  }, [contactId, fetchMessages]);
+    startTransition(async () => {
+      fetchMessagesAction(contactId).then((data) => {
+        setMessages(data);
+      });
+    });
+  }, [contactId]);
 
   const formatTimestamp = (isoString: string): string => {
     return new Date(isoString).toLocaleString();
