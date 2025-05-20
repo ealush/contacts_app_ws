@@ -26,6 +26,9 @@ export default function Pager({
     sendMessage,
     initialMessages
   );
+  const [validationErrors, setValidationErrors] = useState<
+    undefined | string[]
+  >();
   const [optimisticMessages, addOptimisticMessage] = useOptimistic(
     messages,
     (prevMessages: Message[], newMessage: Message) => [
@@ -57,6 +60,11 @@ export default function Pager({
           </div>
         ))}
       </div>
+      <div>
+        {validationErrors && (
+          <span className={styles.errorMessage}>{validationErrors[0]}</span>
+        )}
+      </div>
       <form action={formAction} className={styles.messageForm}>
         <input type="hidden" name="id" value={contactId} />
         <input
@@ -86,8 +94,17 @@ export default function Pager({
       isOptimistic: true,
     });
 
-    const result = await sendMessageAction(formData);
+    const result = await sendMessageAction({
+      id: contactId,
+      content: formData.get("content") as string,
+    });
 
-    return [result, ...prevState] as Message[];
+    if ((result?.validationErrors?.content?._errors ?? []).length > 0) {
+      setValidationErrors(result?.validationErrors?.content?._errors);
+    } else {
+      setValidationErrors(undefined);
+    }
+
+    return [result?.data, ...prevState] as Message[];
   }
 }
