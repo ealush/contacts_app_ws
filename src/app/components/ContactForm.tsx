@@ -1,9 +1,15 @@
+"use client";
+
+import { useActionState } from "react";
 import upsertContactAction from "../actions/upsertContactAction";
 import ButtonSubmit from "./ButtonSubmit";
 import styles from "./ContactForm.module.css";
 import FormInput from "./FormInput";
 import PageLayout, { Content, Header } from "./PageLayout";
 import Link from "next/link";
+import { SuiteSerializer } from "vest/SuiteSerializer";
+import { contactFormSuite } from "../validation/contactFormSuite";
+import classnames from "vest/classnames";
 
 type ContactFormProps = {
   initialData?: {
@@ -21,16 +27,26 @@ type ContactFormProps = {
   title: string;
 };
 
+async function upsertContact(prevState: unknown, formData: FormData) {
+  const result = await upsertContactAction(formData);
+
+  SuiteSerializer.resume(contactFormSuite, result);
+}
+
 export default function ContactForm({ initialData, title }: ContactFormProps) {
+  const [, formAction] = useActionState(upsertContact, null);
+
+  const cn = classnames(contactFormSuite.get(), {
+    valid: styles.success,
+    invalid: styles.error,
+    warning: styles.warning,
+  });
+
   return (
     <PageLayout>
       <Header title={title} />
       <Content>
-        <form
-          className={styles.form}
-          id="contact-form"
-          action={upsertContactAction}
-        >
+        <form className={styles.form} id="contact-form" action={formAction}>
           <div className={styles.formContent}>
             {initialData?.id ? (
               <input
@@ -44,6 +60,8 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="firstName"
               name="firstName"
+              className={cn("firstName")}
+              message={contactFormSuite.getMessage("firstName")}
               defaultValue={initialData?.firstName ?? ""}
             />
 
@@ -52,6 +70,8 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="lastName"
               name="lastName"
+              className={cn("lastName")}
+              message={contactFormSuite.getMessage("lastName")}
               defaultValue={initialData?.lastName ?? ""}
             />
 
@@ -84,6 +104,8 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="email"
               id="email"
               name="email"
+              className={cn("email")}
+              message={contactFormSuite.getMessage("email")}
               defaultValue={initialData?.email ?? ""}
             />
 

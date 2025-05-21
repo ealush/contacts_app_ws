@@ -1,7 +1,9 @@
 "use server";
+import { SuiteSerializer } from "vest/SuiteSerializer";
 
 import { PrismaClient } from "@/app/generated/prisma";
 import { redirect } from "next/navigation";
+import { contactFormSuite } from "../validation/contactFormSuite";
 const prisma = new PrismaClient();
 
 export default async function upsertContactAction(formData: FormData) {
@@ -15,6 +17,12 @@ export default async function upsertContactAction(formData: FormData) {
   const address = formData.get("address")?.toString();
   const note = formData.get("note")?.toString();
   const description = formData.get("description")?.toString();
+
+  const result = await contactFormSuite.runStatic(formData);
+
+  if (!result.isValid()) {
+    return SuiteSerializer.serialize(result);
+  }
 
   if (contactId === null || contactId === "") {
     await prisma.contact.create({
