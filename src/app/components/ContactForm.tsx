@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import upsertContactAction from "../actions/upsertContactAction";
 import ButtonSubmit from "./ButtonSubmit";
 import styles from "./ContactForm.module.css";
@@ -35,6 +35,7 @@ async function upsertContact(prevState: unknown, formData: FormData) {
 
 export default function ContactForm({ initialData, title }: ContactFormProps) {
   const [, formAction] = useActionState(upsertContact, null);
+  const { onChange } = useVest();
 
   const cn = classnames(contactFormSuite.get(), {
     valid: styles.success,
@@ -46,7 +47,12 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
     <PageLayout>
       <Header title={title} />
       <Content>
-        <form className={styles.form} id="contact-form" action={formAction}>
+        <form
+          className={styles.form}
+          id="contact-form"
+          action={formAction}
+          onChange={onChange}
+        >
           <div className={styles.formContent}>
             {initialData?.id ? (
               <input
@@ -136,7 +142,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
             />
           </div>
           <div className={styles.formActions}>
-            <ButtonSubmit />
+            <ButtonSubmit disabled={!contactFormSuite.isValid()} />
             <Link href="/" className={styles.cancelButton}>
               Cancel
             </Link>
@@ -145,4 +151,22 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
       </Content>
     </PageLayout>
   );
+}
+
+function useVest() {
+  const [, setVestState] = useState(contactFormSuite.get());
+
+  return {
+    onChange: handleChange,
+  };
+
+  function handleChange(e: React.ChangeEvent<HTMLFormElement>) {
+    contactFormSuite(
+      new FormData(e.target.form as HTMLFormElement),
+      e.target.name
+    ).done(() => {
+      setVestState(contactFormSuite.get());
+      console.log(contactFormSuite.get());
+    });
+  }
 }
