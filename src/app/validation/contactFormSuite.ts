@@ -1,5 +1,6 @@
 import { create, test, enforce, only } from "vest";
 import "vest/enforce/email";
+import doesEmailExist from "../db/doesEmailExist";
 
 export const contactFormSuite = create(
   "contactFormSuite",
@@ -33,5 +34,21 @@ export const contactFormSuite = create(
     test("email", "Email must be a valid email address", () => {
       enforce(email).isEmail();
     });
+
+    test.memo(
+      "email",
+      "Email already exists",
+      async () => {
+        const exists = await doesEmailExist(
+          email,
+          data.get("contactId")
+            ? parseInt(data.get("contactId") as string)
+            : undefined
+        );
+
+        enforce(exists).isFalsy();
+      },
+      [email, data.get("contactId")]
+    );
   }
 );
