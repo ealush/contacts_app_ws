@@ -23,6 +23,7 @@ export function Header({ children, title }: HeaderProps) {
     <div className={styles.outerHeader}>
       <div className={styles.header}>
         {!!title ? <h1 className={styles.title}>{title}</h1> : null}
+        <title>{title}</title>
       </div>
       {children}
     </div>
