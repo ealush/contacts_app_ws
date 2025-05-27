@@ -1,32 +1,46 @@
-"use client";
+import { PrismaClient } from "@/app/generated/prisma";
 
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { ContactWithFavorite } from "../types";
 import styles from "./Contact.module.css";
-import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
+
+const prisma = new PrismaClient();
 
 type ContactProps = {
   contact: ContactWithFavorite;
 };
 
 export function ButtonFavorite({ contact }: ContactProps) {
-  const router = useRouter();
-
   return (
-    <button
-      className={styles.actionButton}
-      onClick={toggleFavorite}
-      title={contact.isFavorite ? "Remove from favorites" : "Add to favorites"}
-    >
-      {contact.isFavorite ? <FaStar /> : <FaRegStar />}
-    </button>
+    <form>
+      <button
+        className={styles.actionButton}
+        title={
+          contact.isFavorite ? "Remove from favorites" : "Add to favorites"
+        }
+        formAction={async () => {
+          "use server";
+
+          const existingFavorite = await prisma.favoriteContact.findUnique({
+            where: { contactId: contact.id },
+          });
+
+          if (existingFavorite) {
+            await prisma.favoriteContact.delete({
+              where: { contactId: contact.id },
+            });
+          } else {
+            await prisma.favoriteContact.create({
+              data: { contactId: contact.id },
+            });
+          }
+
+          revalidatePath("/");
+        }}
+      >
+        {contact.isFavorite ? <FaStar /> : <FaRegStar />}
+      </button>
+    </form>
   );
-
-  async function toggleFavorite() {
-    await fetch(`/api/contacts/${contact.id}/favorite`, {
-      method: "POST",
-    });
-
-    router.refresh();
-  }
 }
