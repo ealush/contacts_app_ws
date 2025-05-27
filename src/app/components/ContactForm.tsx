@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import upsertContactAction from "../actions/upsertContactAction";
 import styles from "./ContactForm.module.css";
 import FormInput from "./FormInput";
 import PageLayout, { Content, Header } from "./PageLayout";
 import Link from "next/link";
-import createContactAction from "../actions/createContactAction";
-import editContactAction from "../actions/editContactAction";
 
 type ContactFormProps = {
   initialData?: {
@@ -26,13 +23,15 @@ type ContactFormProps = {
 };
 
 export default function ContactForm({ initialData, title }: ContactFormProps) {
-  const action = initialData ? editContactAction : createContactAction;
-
   return (
     <PageLayout>
       <Header title={title} />
       <Content>
-        <form action={action} className={styles.form} id="contact-form">
+        <form
+          action={upsertContactAction}
+          className={styles.form}
+          id="contact-form"
+        >
           <div className={styles.formContent}>
             {initialData ? (
               <input type="hidden" name="id" value={initialData?.id} />
