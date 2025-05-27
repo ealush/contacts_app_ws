@@ -5,6 +5,7 @@ import Contact from "@/app/components/Contact";
 import { FaTimes } from "react-icons/fa";
 import Link from "next/link";
 import Pager from "@/app/components/Pager";
+import fetchMessagesAction from "@/app/actions/fetchMessagesAction";
 
 const prisma = new PrismaClient();
 
@@ -15,6 +16,7 @@ export default async function ContactPage({
 }) {
   const { id } = await params;
   const contact = await getContact(parseInt(id));
+  const messages = await fetchMessagesAction(parseInt(id));
 
   if (!contact) {
     return <div>Contact not found</div>;
@@ -29,7 +31,7 @@ export default async function ContactPage({
         <div>
           <Contact contact={contact} contactPage />
         </div>
-        <Pager contactId={contact.id} />
+        <Pager contactId={contact.id} messages={messages} />
         <Link href="/" className={styles.fab}>
           <FaTimes />
         </Link>

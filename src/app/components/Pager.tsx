@@ -1,15 +1,8 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useActionState,
-  useTransition,
-  useOptimistic,
-} from "react";
+import React, { useState, useActionState, useOptimistic } from "react";
 import styles from "./pager.module.css";
 import sendMessageAction from "../actions/sendMessageAction";
-import fetchMessagesAction from "../actions/fetchMessagesAction";
 import clsx from "clsx";
 
 interface Message {
@@ -22,12 +15,17 @@ interface Message {
 
 interface PagerProps {
   contactId: number;
+  messages: Message[];
 }
 
-export default function Pager({ contactId }: PagerProps) {
-  const [, formAction, isPending] = useActionState(sendMessage, null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, startTransition] = useTransition();
+export default function Pager({
+  contactId,
+  messages: initialMessages,
+}: PagerProps) {
+  const [messages, formAction, isPending] = useActionState(
+    sendMessage,
+    initialMessages
+  );
   const [optimisticMessages, addOptimisticMessage] = useOptimistic(
     messages,
     (prevMessages: Message[], newMessage: Message) => [
@@ -35,14 +33,6 @@ export default function Pager({ contactId }: PagerProps) {
       ...prevMessages,
     ]
   );
-
-  useEffect(() => {
-    startTransition(async () => {
-      fetchMessagesAction(contactId).then((data) => {
-        setMessages(data);
-      });
-    });
-  }, [contactId]);
 
   const formatTimestamp = (isoString: string): string => {
     return new Date(isoString).toLocaleString();
@@ -53,21 +43,19 @@ export default function Pager({ contactId }: PagerProps) {
       <h3>Pager</h3>
 
       <div className={styles.messageList}>
-        {isLoading && <p>Loading messages...</p>}
-        {!isLoading &&
-          optimisticMessages.slice(0, 5).map((msg) => (
-            <div
-              key={msg.id}
-              className={clsx(styles.messageItem, {
-                [styles.optimistic]: msg.isOptimistic,
-              })}
-            >
-              <p className={styles.messageContent}>{msg.content}</p>
-              <span className={styles.messageTimestamp}>
-                {formatTimestamp(msg.timestamp)}
-              </span>
-            </div>
-          ))}
+        {optimisticMessages.slice(0, 5).map((msg) => (
+          <div
+            key={msg.id}
+            className={clsx(styles.messageItem, {
+              [styles.optimistic]: msg.isOptimistic,
+            })}
+          >
+            <p className={styles.messageContent}>{msg.content}</p>
+            <span className={styles.messageTimestamp}>
+              {formatTimestamp(msg.timestamp)}
+            </span>
+          </div>
+        ))}
       </div>
       <form action={formAction} className={styles.messageForm}>
         <input type="hidden" name="id" value={contactId} />
@@ -76,13 +64,12 @@ export default function Pager({ contactId }: PagerProps) {
           placeholder="Type your message..."
           className={styles.messageInput}
           aria-label="New message input"
-          disabled={isLoading}
           name="content"
         />
         <button
           type="submit"
           className={styles.sendButton}
-          disabled={isPending || isLoading}
+          disabled={isPending}
         >
           Send
         </button>
@@ -90,7 +77,7 @@ export default function Pager({ contactId }: PagerProps) {
     </div>
   );
 
-  async function sendMessage(_: unknown, formData: FormData) {
+  async function sendMessage(prevState: Message[], formData: FormData) {
     addOptimisticMessage({
       id: Date.now(),
       content: formData.get("content") as string,
@@ -99,8 +86,8 @@ export default function Pager({ contactId }: PagerProps) {
       isOptimistic: true,
     });
 
-    const message = await sendMessageAction(formData);
+    const result = await sendMessageAction(formData);
 
-    setMessages((prevMessages) => [message, ...prevMessages]);
+    return [result, ...prevState] as Message[];
   }
 }
