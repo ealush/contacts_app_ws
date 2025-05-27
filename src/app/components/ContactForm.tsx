@@ -7,39 +7,42 @@ import FormInput from "./FormInput";
 import PageLayout, { Content, Header } from "./PageLayout";
 import Link from "next/link";
 import createContactAction from "../actions/createContactAction";
+import editContactAction from "../actions/editContactAction";
 
 type ContactFormProps = {
   initialData?: {
     id?: number;
-    firstName: string | null;
-    lastName: string | null;
-    middleName: string | null;
-    nickname: string | null;
-    phoneNumber: string | null;
-    email: string | null;
-    address: string | null;
-    note: string | null;
-    description: string | null;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    middleName: string | undefined;
+    nickname: string | undefined;
+    phoneNumber: string | undefined;
+    email: string | undefined;
+    address: string | undefined;
+    note: string | undefined;
+    description: string | undefined;
   };
   title: string;
 };
 
 export default function ContactForm({ initialData, title }: ContactFormProps) {
+  const action = initialData ? editContactAction : createContactAction;
+
   return (
     <PageLayout>
       <Header title={title} />
       <Content>
-        <form
-          action={createContactAction}
-          className={styles.form}
-          id="contact-form"
-        >
+        <form action={action} className={styles.form} id="contact-form">
           <div className={styles.formContent}>
+            {initialData ? (
+              <input type="hidden" name="id" value={initialData?.id} />
+            ) : null}
             <FormInput
               label="First Name"
               type="text"
               id="firstName"
               name="firstName"
+              defaultValue={initialData?.firstName}
             />
 
             <FormInput
@@ -47,6 +50,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="lastName"
               name="lastName"
+              defaultValue={initialData?.lastName}
             />
 
             <FormInput
@@ -54,6 +58,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="middleName"
               name="middleName"
+              defaultValue={initialData?.middleName}
             />
 
             <FormInput
@@ -61,6 +66,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="nickname"
               name="nickname"
+              defaultValue={initialData?.nickname}
             />
 
             <FormInput
@@ -68,15 +74,23 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="tel"
               id="phoneNumber"
               name="phoneNumber"
+              defaultValue={initialData?.phoneNumber}
             />
 
-            <FormInput label="Email" type="email" id="email" name="email" />
+            <FormInput
+              label="Email"
+              type="email"
+              id="email"
+              name="email"
+              defaultValue={initialData?.email}
+            />
 
             <FormInput
               label="Address"
               type="text"
               id="address"
               name="address"
+              defaultValue={initialData?.address}
             />
 
             <FormInput
@@ -84,6 +98,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="textarea"
               id="note"
               name="note"
+              defaultValue={initialData?.note}
               rows={3}
             />
 
@@ -92,6 +107,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="textarea"
               id="description"
               name="description"
+              defaultValue={initialData?.description}
               rows={3}
             />
           </div>
