@@ -1,6 +1,7 @@
 "use server";
 
 import { PrismaClient } from "@/app/generated/prisma";
+import { setTimeout } from "timers/promises";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,9 @@ export default async function sendMessageAction(formData: FormData) {
   const content = formData.get("content") as string;
   const id = formData.get("id") as string;
 
-  return await prisma.message.create({
+  await setTimeout(1000);
+
+  const msg = await prisma.message.create({
     data: {
       content,
       contact: {
@@ -18,4 +21,9 @@ export default async function sendMessageAction(formData: FormData) {
       },
     },
   });
+
+  return {
+    ...msg,
+    timeStamp: msg.timestamp.toLocaleDateString(),
+  };
 }
