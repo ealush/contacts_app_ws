@@ -6,6 +6,7 @@ import styles from "./ContactForm.module.css";
 import FormInput from "./FormInput";
 import PageLayout, { Content, Header } from "./PageLayout";
 import Link from "next/link";
+import createContactAction from "../actions/createContactAction";
 
 type ContactFormProps = {
   initialData?: {
@@ -24,33 +25,21 @@ type ContactFormProps = {
 };
 
 export default function ContactForm({ initialData, title }: ContactFormProps) {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    firstName: initialData?.firstName || "",
-    lastName: initialData?.lastName || "",
-    middleName: initialData?.middleName || "",
-    nickname: initialData?.nickname || "",
-    phoneNumber: initialData?.phoneNumber || "",
-    email: initialData?.email || "",
-    address: initialData?.address || "",
-    note: initialData?.note || "",
-    description: initialData?.description || "",
-  });
-  const [isSaving, setIsSaving] = useState(false);
-
   return (
     <PageLayout>
       <Header title={title} />
       <Content>
-        <form onSubmit={handleSubmit} className={styles.form} id="contact-form">
+        <form
+          action={createContactAction}
+          className={styles.form}
+          id="contact-form"
+        >
           <div className={styles.formContent}>
             <FormInput
               label="First Name"
               type="text"
               id="firstName"
               name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
             />
 
             <FormInput
@@ -58,8 +47,6 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="lastName"
               name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
             />
 
             <FormInput
@@ -67,8 +54,6 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="middleName"
               name="middleName"
-              value={formData.middleName}
-              onChange={handleChange}
             />
 
             <FormInput
@@ -76,8 +61,6 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="text"
               id="nickname"
               name="nickname"
-              value={formData.nickname}
-              onChange={handleChange}
             />
 
             <FormInput
@@ -85,26 +68,15 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="tel"
               id="phoneNumber"
               name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
             />
 
-            <FormInput
-              label="Email"
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <FormInput label="Email" type="email" id="email" name="email" />
 
             <FormInput
               label="Address"
               type="text"
               id="address"
               name="address"
-              value={formData.address}
-              onChange={handleChange}
             />
 
             <FormInput
@@ -112,8 +84,6 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="textarea"
               id="note"
               name="note"
-              value={formData.note}
-              onChange={handleChange}
               rows={3}
             />
 
@@ -122,8 +92,6 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               type="textarea"
               id="description"
               name="description"
-              value={formData.description}
-              onChange={handleChange}
               rows={3}
             />
           </div>
@@ -133,7 +101,7 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               form="contact-form"
               className={styles.submitButton}
             >
-              {isSaving ? "Saving..." : "Save"}
+              Save
             </button>
             <Link href="/" className={styles.cancelButton}>
               Cancel
@@ -143,44 +111,4 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
       </Content>
     </PageLayout>
   );
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setIsSaving(true);
-
-    try {
-      const url = initialData?.id
-        ? `/api/contacts/${initialData.id}`
-        : "/api/contacts";
-
-      const method = initialData?.id ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        router.push("/");
-        router.refresh();
-      }
-    } catch (error) {
-      console.error("Error saving contact:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  }
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
 }
