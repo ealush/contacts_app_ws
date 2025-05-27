@@ -3,11 +3,12 @@
 import React, {
   useState,
   useEffect,
-  FormEvent,
   ChangeEvent,
   useCallback,
+  useActionState,
 } from "react";
 import styles from "./pager.module.css";
+import sendMessageAction from "../actions/sendMessageAction";
 
 interface Message {
   id: number;
@@ -21,8 +22,8 @@ interface PagerProps {
 }
 
 export default function Pager({ contactId }: PagerProps) {
+  const [, action, isPending] = useActionState(sendMessage, null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchMessages = useCallback(
@@ -46,38 +47,6 @@ export default function Pager({ contactId }: PagerProps) {
     }
   }, [contactId, fetchMessages]);
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(event.target.value);
-  };
-
-  const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!newMessage.trim()) return;
-
-    const response = await fetch(`/api/contacts/${contactId}/message`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: contactId,
-        content: newMessage,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response
-        .json()
-        .catch(() => ({ error: "Unknown error" }));
-      throw new Error(
-        errorData.error || `HTTP error! status: ${response.status}`
-      );
-    }
-
-    setNewMessage("");
-    fetchMessages();
-  };
-
   const formatTimestamp = (isoString: string): string => {
     return new Date(isoString).toLocaleString();
   };
@@ -98,11 +67,11 @@ export default function Pager({ contactId }: PagerProps) {
             </div>
           ))}
       </div>
-      <form onSubmit={handleSendMessage} className={styles.messageForm}>
+      <form action={action} className={styles.messageForm}>
+        <input type="hidden" name="id" value={contactId} />
         <input
           type="text"
-          value={newMessage}
-          onChange={handleInputChange}
+          name="content"
           placeholder="Type your message..."
           className={styles.messageInput}
           aria-label="New message input"
@@ -111,11 +80,17 @@ export default function Pager({ contactId }: PagerProps) {
         <button
           type="submit"
           className={styles.sendButton}
-          disabled={!newMessage.trim() || isLoading}
+          disabled={isLoading || isPending}
         >
           Send
         </button>
       </form>
     </div>
   );
+
+  async function sendMessage(_: unknown, formData: FormData) {
+    const message = await sendMessageAction(formData);
+
+    setMessages((messages) => [message, ...messages] as Message[]);
+  }
 }
