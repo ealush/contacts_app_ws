@@ -4,14 +4,14 @@ import clsx from "clsx";
 
 type FormInputProps = {
   label: string;
-  value?: string;
+  value?: string | null;
   type?: string;
   name: string;
   id: string;
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   required?: boolean;
   rows?: number;
-  defaultValue?: string;
+  defaultValue?: string | null;
   className?: string;
   message?: string;
 };
@@ -41,21 +41,21 @@ export default function FormInput({
         <textarea
           id={id}
           name={name}
-          value={value}
+          value={value ?? undefined}
           onChange={onChange}
           required={required}
           rows={rows}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue ?? undefined}
         />
       ) : (
         <input
           type={type}
           id={id}
           name={name}
-          value={value}
+          value={value ?? undefined}
           onChange={onChange}
           required={required}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue ?? undefined}
         />
       )}
     </div>

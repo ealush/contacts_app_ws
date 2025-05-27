@@ -9,15 +9,15 @@ import Link from "next/link";
 type ContactFormProps = {
   initialData?: {
     id?: number;
-    firstName: string | undefined;
-    lastName: string | undefined;
-    middleName: string | undefined;
-    nickname: string | undefined;
-    phoneNumber: string | undefined;
-    email: string | undefined;
-    address: string | undefined;
-    note: string | undefined;
-    description: string | undefined;
+    firstName: string | null;
+    lastName: string | null;
+    middleName: string | null;
+    nickname: string | null;
+    phoneNumber: string | null;
+    email: string | null;
+    address: string | null;
+    note: string | null;
+    description: string | null;
   };
   title: string;
 };
