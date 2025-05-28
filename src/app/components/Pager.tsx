@@ -11,6 +11,7 @@ interface Message {
   timestamp: string;
   contactId: number;
   isOptimistic?: boolean;
+  error?: boolean;
 }
 
 interface PagerProps {
@@ -48,7 +49,8 @@ export default function Pager({
             key={msg.id}
             className={clsx(
               styles.messageItem,
-              msg.isOptimistic && styles.optimistic
+              msg.isOptimistic && styles.optimistic,
+              msg.error && styles.error
             )}
           >
             <p className={styles.messageContent}>{msg.content}</p>
@@ -90,8 +92,25 @@ export default function Pager({
       isOptimistic: true,
     });
 
-    const message = await sendMessageAction(formData);
+    const message = await sendMessageAction({
+      content,
+      id: parseInt(id),
+    });
 
-    return [message, ...prevState] as Message[];
+    if (!message?.data) {
+      return [
+        {
+          id: Math.random(),
+          content: "🚨 Failed to send message",
+          timestamp: new Date().toISOString(),
+          contactId: parseInt(id),
+          isOptimistic: true,
+          error: true,
+        },
+        ...prevState,
+      ];
+    }
+
+    return [message?.data, ...prevState] as Message[];
   }
 }

@@ -4,7 +4,7 @@ import { PrismaClient } from "@/app/generated/prisma";
 const prisma = new PrismaClient();
 
 export default async function getMessagesAction(id: number) {
-  return await prisma.message.findMany({
+  const msgs = await prisma.message.findMany({
     where: {
       contactId: id,
     },
@@ -13,4 +13,11 @@ export default async function getMessagesAction(id: number) {
     },
     take: 5,
   });
+
+  return msgs.map((msg) => ({
+    id: msg.id,
+    content: msg.content,
+    timestamp: msg.timestamp.toISOString(),
+    contactId: msg.contactId,
+  }));
 }

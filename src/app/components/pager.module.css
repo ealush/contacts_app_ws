@@ -100,3 +100,8 @@
 .optimistic {
   opacity: 0.5;
 }
+
+.error {
+  background-color: rgb(244, 149, 157);
+  opacity: 0.8;
+}
