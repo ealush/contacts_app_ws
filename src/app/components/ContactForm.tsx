@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import upsertContactAction from "../actions/upsertContactAction";
 import ButtonSubmit from "./ButtonSubmit";
 import styles from "./ContactForm.module.css";
@@ -35,6 +35,7 @@ async function upsertContact(_: unknown, formData: FormData) {
 
 export default function ContactForm({ initialData, title }: ContactFormProps) {
   const [, formAction] = useActionState(upsertContact, null);
+  const { handleChange } = useVest();
 
   const cn = classnames(contactFormSuite.get(), {
     valid: styles.success,
@@ -46,7 +47,12 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
     <PageLayout>
       <Header title={title} />
       <Content>
-        <form action={formAction} className={styles.form} id="contact-form">
+        <form
+          action={formAction}
+          className={styles.form}
+          id="contact-form"
+          onChange={handleChange}
+        >
           <div className={styles.formContent}>
             {initialData ? (
               <input type="hidden" name="id" value={initialData?.id} />
@@ -141,4 +147,18 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
       </Content>
     </PageLayout>
   );
+}
+
+function useVest() {
+  const [, setValidationState] = useState(contactFormSuite.get());
+
+  return {
+    handleChange,
+  };
+
+  function handleChange(e: React.ChangeEvent<HTMLFormElement>) {
+    contactFormSuite(new FormData(e.target.form), e.target.name).done(() => {
+      setValidationState(contactFormSuite.get());
+    });
+  }
 }
