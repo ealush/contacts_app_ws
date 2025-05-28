@@ -21,6 +21,7 @@ type FooterProps = {
 export function Header({ children, title }: HeaderProps) {
   return (
     <div className={styles.outerHeader}>
+      <title>{title}</title>
       <div className={styles.header}>
         {!!title ? <h1 className={styles.title}>{title}</h1> : null}
       </div>

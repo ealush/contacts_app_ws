@@ -3,7 +3,7 @@ import doesEmailExist from "../db/doesEmailExist";
 
 export const contactFormSuite = create(
   "contactFormSuite",
-  (data: FormData, currentField: string) => {
+  (data: FormData, currentField?: string) => {
     const id = data.get("id") as string;
     const firstName = data.get("firstName") as string;
     const lastName = data.get("lastName") as string;
