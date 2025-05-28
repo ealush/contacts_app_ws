@@ -29,6 +29,8 @@ export default actionClient
       },
     });
 
+    await setTimeout(10000);
+
     return {
       ...msg,
       timeStamp: msg.timestamp.toLocaleDateString(),
