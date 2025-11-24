@@ -3,14 +3,14 @@
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { ContactWithFavorite } from "../types";
 import styles from "./Contact.module.css";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type ContactProps = {
   contact: ContactWithFavorite;
 };
 
 export function ButtonFavorite({ contact }: ContactProps) {
-  // const router = useRouter();
+  const router = useRouter();
 
   return (
     <button
@@ -23,9 +23,9 @@ export function ButtonFavorite({ contact }: ContactProps) {
   );
 
   async function toggleFavorite() {
-    // await fetch(`/api/contacts/${contact.id}/favorite`, {
-    //   method: "POST",
-    // });
-    // router.refresh();
+    await fetch(`/api/contacts/${contact.id}/favorite`, {
+      method: "POST",
+    });
+    router.refresh();
   }
 }
