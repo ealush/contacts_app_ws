@@ -14,6 +14,72 @@
   --glass-border: rgba(255, 255, 255, 0.6);
   --glass-shadow: 0 4px 20px rgba(2, 136, 209, 0.08);
   --glass-blur: 20px;
+
+  /* Component Tokens */
+  --item-bg: rgba(255, 255, 255, 0.5);
+  --item-bg-hover: rgba(255, 255, 255, 0.8);
+  --item-border: rgba(255, 255, 255, 0.4);
+  --message-bubble-bg: #FFFFFF;
+  --input-bg: #FFFFFF;
+  --tab-active-text: var(--primary);
+}
+
+body.dark-mode {
+  --primary: #4fc3f7; /* Lighter Blue for Dark Mode */
+  --primary-hover: #29b6f6;
+  --bg-color: #050505; /* Deep Black Background */
+  --text-primary: #ffffff; /* Pure White Text */
+  --text-secondary: #b0bec5;
+  
+  /* Much darker glass for premium look */
+  --glass-bg: rgba(20, 20, 20, 0.75); 
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+  
+  /* Dark Mode Components */
+  --item-bg: rgba(30, 30, 30, 0.6);
+  --item-bg-hover: rgba(50, 50, 50, 0.8);
+  --item-border: rgba(255, 255, 255, 0.05);
+  --message-bubble-bg: #1E1E1E;
+  --input-bg: #1E1E1E;
+}
+
+body.high-contrast {
+  --primary: #0000FF; /* Pure Blue */
+  --primary-hover: #0000CC;
+  --bg-color: #FFFFFF;
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  
+  --glass-bg: #FFFFFF; /* No transparency */
+  --glass-border: #000000; /* Solid border */
+  --glass-shadow: none;
+  --glass-blur: 0px;
+  
+  --item-bg: #FFFFFF;
+  --item-bg-hover: #F0F0F0;
+  --item-border: #000000;
+  --message-bubble-bg: #FFFFFF;
+  --input-bg: #FFFFFF;
+}
+
+/* Combine Dark + High Contrast */
+body.dark-mode.high-contrast {
+  --primary: #FFFF00; /* Yellow on Black */
+  --primary-hover: #FFD700;
+  --bg-color: #000000;
+  --text-primary: #FFFFFF;
+  --text-secondary: #FFFFFF;
+  
+  --glass-bg: #000000;
+  --glass-border: #FFFFFF;
+  
+  --item-bg: #000000;
+  --item-bg-hover: #333333;
+  --item-border: #FFFFFF;
+  --message-bubble-bg: #000000;
+  --input-bg: #000000;
+  --tab-active-text: #000000; /* Black text on white active tab */
 }
 
 html,

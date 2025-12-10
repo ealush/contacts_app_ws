@@ -41,6 +41,15 @@ export function Footer({ children }: FooterProps) {
   return <div className={styles.outerFooter}>{children}</div>;
 }
 
+import ThemeControls from "./ThemeControls";
+
+// ... (existing imports)
+
 export default function PageLayout({ children }: PageLayoutProps) {
-  return <main className={styles.container}>{children}</main>;
+  return (
+    <main className={styles.container}>
+      <ThemeControls />
+      {children}
+    </main>
+  );
 }

@@ -42,9 +42,9 @@
   width: 100%;
   padding: 1.5rem 2rem 1rem 2rem;
   /* More transparent for blur effect */
-  background: rgba(255, 255, 255, 0.6); 
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   z-index: 20;
 }

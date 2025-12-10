@@ -6,9 +6,9 @@
 }
 
 .contactItem {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--item-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--item-border);
   border-radius: 16px;
   padding: 1rem 1.25rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -18,10 +18,10 @@
 }
 
 .contactItem:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--item-bg-hover);
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-  border-color: rgba(255, 255, 255, 0.8);
+  border-color: var(--item-border);
 }
 
 .contactHeader {
@@ -113,15 +113,15 @@
   .contactItem {
     border-radius: 0;
     border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.05); /* Separator */
+    border-bottom: 1px solid var(--item-border); /* Separator */
     box-shadow: none;
-    background: rgba(255,255,255,0.4); 
+    background: var(--item-bg); 
     margin: 0;
   }
   
   .contactItem:hover {
     transform: none;
     box-shadow: none;
-    background: rgba(255,255,255,0.8);
+    background: var(--item-bg-hover);
   }
 }
