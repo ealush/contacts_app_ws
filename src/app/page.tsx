@@ -16,10 +16,10 @@ export default async function Home() {
       </Header>
       <Content>
         <ContactList contacts={contacts} />
-        <Link href="/contacts/new" className={styles.fab}>
-          <FaPlus />
-        </Link>
       </Content>
+      <Link href="/contacts/new" className={styles.fab}>
+        <FaPlus />
+      </Link>
     </PageLayout>
   );
 }

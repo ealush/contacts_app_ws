@@ -30,10 +30,10 @@ export default async function ContactPage({
           <Contact contact={contact} contactPage />
         </div>
         <Pager contactId={contact.id} />
-        <Link href="/" className={styles.fab}>
-          <FaTimes />
-        </Link>
       </Content>
+      <Link href="/" className={styles.fab}>
+        <FaTimes />
+      </Link>
     </PageLayout>
   );
 }
