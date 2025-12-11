@@ -1,6 +1,6 @@
 import Contact from "./Contact";
 import { ContactWithFavorite } from "../types";
-import styles from "./Contact.module.css";
+import styles from "./ContactList.module.css";
 
 type ContactListProps = {
   contacts: ContactWithFavorite[];
