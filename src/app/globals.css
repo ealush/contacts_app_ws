@@ -10,10 +10,10 @@
   --text-secondary: #546e7a; /* Blue Grey 600 */
   
   /* Glassmorphism Tokens - Clean & Airy */
-  --glass-bg: rgba(255, 255, 255, 0.7); /* More transparent for better blur */
+  --glass-bg: rgba(255, 255, 255, 0.4); /* More transparent for better blur */
   --glass-border: rgba(255, 255, 255, 0.6);
   --glass-shadow: 0 4px 20px rgba(2, 136, 209, 0.08);
-  --glass-blur: 20px;
+  --glass-blur: 6px;
 
   /* Component Tokens */
   --item-bg: rgba(255, 255, 255, 0.5);

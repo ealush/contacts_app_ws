@@ -8,31 +8,40 @@ type PageLayoutProps = {
 type HeaderProps = {
   children?: ReactNode;
   title?: string;
+  action?: ReactNode;
 };
 
 type ContentProps = {
   children: ReactNode;
+  disableScroll?: boolean;
 };
 
 type FooterProps = {
   children: ReactNode;
 };
 
-export function Header({ children, title }: HeaderProps) {
+export function Header({ children, title, action }: HeaderProps) {
   return (
     <div className={styles.outerHeader}>
       <div className={styles.header}>
         {!!title ? <h1 className={styles.title}>{title}</h1> : null}
+        {action ? <div className={styles.headerAction}>{action}</div> : null}
       </div>
       {children}
     </div>
   );
 }
 
-export function Content({ children }: ContentProps) {
+export function Content({ children, disableScroll = false }: ContentProps) {
   return (
     <div className={styles.content}>
-      <div className={styles.scrollableContent}>{children}</div>
+      <div
+        className={
+          disableScroll ? styles.fixedContent : styles.scrollableContent
+        }
+      >
+        {children}
+      </div>
     </div>
   );
 }

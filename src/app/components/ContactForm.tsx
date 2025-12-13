@@ -6,19 +6,15 @@ import styles from "./ContactForm.module.css";
 import FormInput from "./FormInput";
 import PageLayout, { Content, Header } from "./PageLayout";
 import Link from "next/link";
+import { Submit } from "./Submit";
 
 type ContactFormProps = {
   initialData?: {
     id?: number;
     firstName: string | null;
     lastName: string | null;
-    middleName: string | null;
-    nickname: string | null;
     phoneNumber: string | null;
     email: string | null;
-    address: string | null;
-    note: string | null;
-    description: string | null;
   };
   title: string;
 };
@@ -28,13 +24,8 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
   const [formData, setFormData] = useState({
     firstName: initialData?.firstName || "",
     lastName: initialData?.lastName || "",
-    middleName: initialData?.middleName || "",
-    nickname: initialData?.nickname || "",
     phoneNumber: initialData?.phoneNumber || "",
     email: initialData?.email || "",
-    address: initialData?.address || "",
-    note: initialData?.note || "",
-    description: initialData?.description || "",
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -63,24 +54,6 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
             />
 
             <FormInput
-              label="Middle Name"
-              type="text"
-              id="middleName"
-              name="middleName"
-              value={formData.middleName}
-              onChange={handleChange}
-            />
-
-            <FormInput
-              label="Nickname"
-              type="text"
-              id="nickname"
-              name="nickname"
-              value={formData.nickname}
-              onChange={handleChange}
-            />
-
-            <FormInput
               label="Phone Number"
               type="tel"
               id="phoneNumber"
@@ -97,44 +70,9 @@ export default function ContactForm({ initialData, title }: ContactFormProps) {
               value={formData.email}
               onChange={handleChange}
             />
-
-            <FormInput
-              label="Address"
-              type="text"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-            />
-
-            <FormInput
-              label="Note"
-              type="textarea"
-              id="note"
-              name="note"
-              value={formData.note}
-              onChange={handleChange}
-              rows={3}
-            />
-
-            <FormInput
-              label="Description"
-              type="textarea"
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows={3}
-            />
           </div>
           <div className={styles.formActions}>
-            <button
-              type="submit"
-              form="contact-form"
-              className={styles.submitButton}
-            >
-              {isSaving ? "Saving..." : "Save"}
-            </button>
+            <Submit label={isSaving ? "Saving..." : "Save"} />
             <Link href="/" className={styles.cancelButton}>
               Cancel
             </Link>

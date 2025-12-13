@@ -4,7 +4,7 @@ import styles from "../../page.module.css";
 import Contact from "@/app/components/Contact";
 import { FaTimes } from "react-icons/fa";
 import Link from "next/link";
-import Pager from "@/app/components/Pager";
+import PagerContainer from "./PagerContainer";
 
 const prisma = new PrismaClient();
 
@@ -24,16 +24,16 @@ export default async function ContactPage({
     <PageLayout>
       <Header
         title={[contact.firstName, contact.lastName].filter(Boolean).join(" ")}
+        action={
+          <Link href="/" className={styles.headerActionButton}>
+            <FaTimes />
+          </Link>
+        }
       />
-      <Content>
-        <div>
-          <Contact contact={contact} contactPage />
-        </div>
-        <Pager contactId={contact.id} />
+      <Content disableScroll>
+        <Contact contact={contact} contactPage />
+        <PagerContainer contactId={contact.id} />
       </Content>
-      <Link href="/" className={styles.fab}>
-        <FaTimes />
-      </Link>
     </PageLayout>
   );
 }
