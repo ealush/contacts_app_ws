@@ -11,15 +11,22 @@ export default async function Home() {
 
   return (
     <PageLayout>
-      <Header title="Contacts">
-        <Tabs />
+      <Header
+        title="Contacts"
+        action={
+          <Link href="/contacts/new" className={styles.headerActionButton}>
+            <FaPlus />
+          </Link>
+        }
+      >
+        <Tabs
+          allCount={contacts.length}
+          favoriteCount={contacts.filter((c) => c.isFavorite).length}
+        />
       </Header>
       <Content>
         <ContactList contacts={contacts} />
       </Content>
-      <Link href="/contacts/new" className={styles.fab}>
-        <FaPlus />
-      </Link>
     </PageLayout>
   );
 }
@@ -32,7 +39,7 @@ async function getContacts() {
       isFavorite: true,
     },
     orderBy: {
-      firstName: "asc",
+      createdAt: "desc",
     },
   });
   return contacts;

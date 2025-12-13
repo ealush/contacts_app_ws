@@ -9,6 +9,8 @@ import React, {
 } from "react";
 import styles from "./pager.module.css";
 
+import clsx from "clsx";
+
 interface Message {
   id: number;
   content: string;
@@ -16,13 +18,15 @@ interface Message {
   contactId: number;
 }
 
+type Messages = Message[];
+
 interface PagerProps {
   contactId: number;
 }
 
 export default function Pager({ contactId }: PagerProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState<string>("");
+  const [messages, setMessages] = useState<Messages>([]);
+  const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchMessages = useCallback(
@@ -30,7 +34,7 @@ export default function Pager({ contactId }: PagerProps) {
       setIsLoading(true);
       const response = await fetch(`/api/contacts/${contactId}/message`);
 
-      const data: Message[] = await response.json();
+      const data: Messages = await response.json();
       setMessages(data);
       setIsLoading(false);
     },
@@ -47,12 +51,12 @@ export default function Pager({ contactId }: PagerProps) {
   }, [contactId, fetchMessages]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(event.target.value);
+    setInputValue(event.target.value);
   };
 
   const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!inputValue.trim()) return;
 
     const response = await fetch(`/api/contacts/${contactId}/message`, {
       method: "POST",
@@ -61,7 +65,7 @@ export default function Pager({ contactId }: PagerProps) {
       },
       body: JSON.stringify({
         id: contactId,
-        content: newMessage,
+        content: inputValue,
       }),
     });
 
@@ -74,48 +78,54 @@ export default function Pager({ contactId }: PagerProps) {
       );
     }
 
-    setNewMessage("");
+    setInputValue("");
     fetchMessages();
-  };
-
-  const formatTimestamp = (isoString: string): string => {
-    return new Date(isoString).toLocaleString();
   };
 
   return (
     <div className={styles.pagerContainer}>
-      <h3>Pager</h3>
+      <h3>📟 Pager</h3>
 
       <div className={styles.messageList}>
-        {isLoading && <p>Loading messages...</p>}
-        {!isLoading &&
-          messages.map((msg) => (
-            <div key={msg.id} className={styles.messageItem}>
-              <p className={styles.messageContent}>{msg.content}</p>
-              <span className={styles.messageTimestamp}>
-                {formatTimestamp(msg.timestamp)}
-              </span>
-            </div>
-          ))}
+        {messages.map((msg) => (
+          <MessageItem key={msg.id} msg={msg} />
+        ))}
       </div>
       <form onSubmit={handleSendMessage} className={styles.messageForm}>
+        <input type="hidden" name="id" value={contactId} />
         <input
           type="text"
-          value={newMessage}
+          value={inputValue}
           onChange={handleInputChange}
           placeholder="Type your message..."
           className={styles.messageInput}
           aria-label="New message input"
           disabled={isLoading}
+          name="content"
         />
         <button
           type="submit"
           className={styles.sendButton}
-          disabled={!newMessage.trim() || isLoading}
+          disabled={!inputValue.trim() || isLoading}
         >
           Send
         </button>
       </form>
+    </div>
+  );
+}
+
+function MessageItem({ msg }: { msg: Message }) {
+  const formatTimestamp = (isoString: string): string => {
+    return new Date(isoString).toLocaleString();
+  };
+
+  return (
+    <div className={clsx(styles.messageItem)}>
+      <p className={styles.messageContent}>{msg.content}</p>
+      <span className={styles.messageTimestamp}>
+        {formatTimestamp(msg.timestamp)}
+      </span>
     </div>
   );
 }

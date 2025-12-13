@@ -1,14 +1,19 @@
 .pagerContainer {
   font-family: inherit;
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 16px 16px 0 0;
+  padding: 1.5rem; /* Standard padding */
   display: flex;
   flex-direction: column;
   flex: 1;
   background: var(--item-bg);
   border: 1px solid var(--item-border);
   margin-top: 2rem;
-  max-height: 400px;
+  min-height: 0; /* Important for flex nesting */
+  overflow: hidden; /* Ensure content stays within */
+}
+
+:global(.high-contrast) .pagerContainer {
+  border-bottom: none;
 }
 
 .pagerContainer h3 {
@@ -17,17 +22,20 @@
   font-size: 1.2rem;
   font-weight: 700;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .messageList {
   flex-grow: 1;
-  overflow-y: auto;
-  margin-bottom: 1rem;
+  display: flex; /* Critical for flex properties to work */
+  overflow-y: auto; /* Internal scroll */
+  margin-bottom: 0;
   padding-right: 0.5rem;
-  display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column; /* Normal order (reversed by scaleY) */
   gap: 0.75rem;
+  padding-bottom: 1rem; /* Remove extra padding */
+  padding-top: 1rem;
+  transform: scaleY(-1); /* Invert container so Top is Bottom */
 }
 
 .messageItem {
@@ -41,9 +49,8 @@
   gap: 0.25rem;
   max-width: 85%;
   align-self: flex-start;
+  transform: scaleY(-1); /* Re-invert item so text is upright */
 }
-
-/* Simulate clear distinction between types if needed, for now just clean bubbles */
 
 .messageContent {
   margin: 0;
@@ -58,18 +65,35 @@
   align-self: flex-end;
 }
 
+/* Optimistic state */
+.optimistic {
+  opacity: 0.5;
+  position: relative;
+}
+
+.optimistic::before {
+  content: "🕒"; /* Simple clock icon */
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+}
+
 .messageForm {
   display: flex;
-  gap: 0.75rem;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0,0,0,0.05);
+  gap: 0.5rem;
+  padding: 1rem 0 0 0; /* Padding top only */
+  border-top: 1px solid #eee;
+  background-color: var(--item-bg);
+  z-index: 10;
+  margin-top: auto; /* Push to bottom */
 }
 
 .messageInput {
   flex-grow: 1;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   font-size: 0.95rem;
   background: var(--input-bg);
@@ -98,7 +122,7 @@
 .sendButton:hover:not(:disabled) {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .sendButton:disabled {
