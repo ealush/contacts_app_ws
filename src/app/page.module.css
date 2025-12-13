@@ -43,8 +43,8 @@
   padding: 1.5rem 2rem 1rem 2rem;
   /* More transparent for blur effect */
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  /* -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); */
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   z-index: 20;
 }
@@ -75,22 +75,73 @@
 .header {
   margin-bottom: 0.5rem;
   text-align: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerAction {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Update FAB to be Header Action Button when inside header */
+/* Update FAB to be Header Action Button when inside header */
+.headerActionButton {
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px; /* Match actionButton radius */
+  border: none;
+  color: var(--text-secondary); /* Subtler color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.headerActionButton:hover {
+  background-color: rgba(99, 102, 241, 0.1); /* Match actionButton hover bg */
+  color: var(--primary);
+  opacity: 1;
+  transform: none; /* Remove scale effect for cleaner feel */
 }
 
 .scrollableContent {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* Revert to auto scroll for main pages */
   display: flex;
   flex-direction: column;
   padding: 1rem 1.5rem;
-  /* Padding top to account for absolute header height (~130px) + spacing */
-  padding-top: 140px;
-  /* Add padding bottom to account for FAB */
-  padding-bottom: 5rem; 
+  padding-top: 140px; /* Header height spacer (replaced ::before) */
+  padding-bottom: 0; 
+}
+
+
+
+.fixedContent {
+  flex: 1;
+  overflow-y: hidden; /* Disable page scroll for chat layout */
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.5rem;
+  padding-top: 140px; /* Keep padding for fixed content (Chat) where blur isn't primary focus */
+  padding-bottom: 0;
 }
 
 @media (max-width: 600px) {
-  .scrollableContent {
+  .scrollableContent,
+  .fixedContent {
     padding-left: 0;
     padding-right: 0;
   }

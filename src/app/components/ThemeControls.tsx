@@ -7,6 +7,16 @@ export default function ThemeControls() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isHighContrast, setIsHighContrast] = useState(false);
 
+  // Load from LocalStorage on mount
+  useEffect(() => {
+    const storedDark = localStorage.getItem("darkMode");
+    const storedHigh = localStorage.getItem("highContrast");
+    
+    if (storedDark === "true") setIsDarkMode(true);
+    if (storedHigh === "true") setIsHighContrast(true);
+  }, []);
+
+  // Sync Dark Mode to DOM
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
@@ -15,6 +25,7 @@ export default function ThemeControls() {
     }
   }, [isDarkMode]);
 
+  // Sync High Contrast to DOM
   useEffect(() => {
     if (isHighContrast) {
       document.body.classList.add("high-contrast");
@@ -23,9 +34,23 @@ export default function ThemeControls() {
     }
   }, [isHighContrast]);
 
+  const toggleDarkMode = () => {
+    const newState = !isDarkMode;
+    setIsDarkMode(newState);
+    localStorage.setItem("darkMode", String(newState));
+  };
+
+  const toggleHighContrast = () => {
+    const newState = !isHighContrast;
+    setIsHighContrast(newState);
+    localStorage.setItem("highContrast", String(newState));
+  };
+
   const handleReset = () => {
     setIsDarkMode(false);
     setIsHighContrast(false);
+    localStorage.setItem("darkMode", "false");
+    localStorage.setItem("highContrast", "false");
   };
 
   const buttonStyle = {
@@ -74,7 +99,7 @@ export default function ThemeControls() {
       {/* Yellow: High Contrast */}
       <div style={{ position: "relative" }} className="control-dot">
         <button
-          onClick={() => setIsHighContrast(!isHighContrast)}
+          onClick={toggleHighContrast}
           style={{
             ...buttonStyle,
             backgroundColor: "#FFBD2E",
@@ -89,7 +114,7 @@ export default function ThemeControls() {
       {/* Green: Dark Mode */}
       <div style={{ position: "relative" }} className="control-dot">
         <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
+          onClick={toggleDarkMode}
           style={{
             ...buttonStyle,
             backgroundColor: "#27C93F",

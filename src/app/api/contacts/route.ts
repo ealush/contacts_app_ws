@@ -10,13 +10,8 @@ export async function POST(request: Request) {
     data: {
       firstName: data.firstName,
       lastName: data.lastName,
-      middleName: data.middleName,
-      nickname: data.nickname,
       phoneNumber: data.phoneNumber,
       email: data.email,
-      address: data.address,
-      note: data.note,
-      description: data.description,
     },
   });
 
