@@ -5,6 +5,8 @@ import Contact from "@/app/components/Contact";
 import { FaTimes } from "react-icons/fa";
 import Link from "next/link";
 import PagerContainer from "./PagerContainer";
+import { Suspense } from "react";
+import Loading from "@/app/components/Loading";
 
 const prisma = new PrismaClient();
 
@@ -32,7 +34,9 @@ export default async function ContactPage({
       />
       <Content disableScroll>
         <Contact contact={contact} contactPage />
-        <PagerContainer contactId={contact.id} />
+        <Suspense fallback={<Loading />}>
+          <PagerContainer contactId={contact.id} />
+        </Suspense>
       </Content>
     </PageLayout>
   );
